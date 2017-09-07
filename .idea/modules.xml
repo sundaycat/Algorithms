@@ -5,6 +5,8 @@
       <module fileurl="file://$PROJECT_DIR$/Algorithms.iml" filepath="$PROJECT_DIR$/Algorithms.iml" />
       <module fileurl="file://$PROJECT_DIR$/MatrixMultiplication/MatrixMultiplication.iml" filepath="$PROJECT_DIR$/MatrixMultiplication/MatrixMultiplication.iml" />
       <module fileurl="file://$PROJECT_DIR$/Maze/Maze.iml" filepath="$PROJECT_DIR$/Maze/Maze.iml" />
+      <module fileurl="file://$PROJECT_DIR$/Quicksort/Quicksort.iml" filepath="$PROJECT_DIR$/Quicksort/Quicksort.iml" />
+      <module fileurl="file://$PROJECT_DIR$/RBtree/RBtree.iml" filepath="$PROJECT_DIR$/RBtree/RBtree.iml" />
     </modules>
   </component>
 </project>

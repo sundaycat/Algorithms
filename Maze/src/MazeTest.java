@@ -1,8 +1,8 @@
-/**
- * Class to test generated maze and write to a file
- * 
- * Solves CS146 Project #3
- * 
+/*
+  Class to test generated maze and write to a file
+
+  Solves CS146 Project #3
+
  */
 import java.io.FileWriter;
 import java.io.IOException;
@@ -46,6 +46,7 @@ public class MazeTest {
 			System.out.println(test2.toString(3));
 			out9.print(test2.toString(3));
 			out9.close();
+			
 
 			System.out.println();
 			System.out.println("############# BSF ###############");

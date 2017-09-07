@@ -1,3 +1,4 @@
+
 public class Cell {
 
 	// Cell's coordinator on the maze
