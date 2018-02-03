@@ -1,5 +1,5 @@
-import java.util.Arrays;
 import java.util.Random;
+import java.util.Arrays;
 
 public class Quicksort {
 
@@ -9,7 +9,7 @@ public class Quicksort {
 		
 		Quicksort qs = new Quicksort();
 		
-		int[] arr1 = qs.populate(10000000);
+		int[] arr1 = qs.populate(100000000);
 		qs.quicksortByLast(arr1, 0, arr1.length - 1);
 		int[] arr2 = Arrays.copyOf(arr1, arr1.length);
 		int[] arr3 = Arrays.copyOf(arr1, arr1.length);
@@ -25,16 +25,14 @@ public class Quicksort {
 		end = System.currentTimeMillis();
 		elapsed = end - start;
 		System.out.println("QS by last elements in ms:" + elapsed);
+
 		
-		
-//		int[] arr = { 5, 2, 17, 13, 14, 17, 19, 14, 18, 2, 4, 8, 2, 5, 0, 6,
-//				13, 4, 12, 18, 10 };
-//		int idx = qs.findPivot(arr, 0, arr.length -1, arr.length/2);
-//		qs.quicksortByMedian(arr, 0, arr.length-1);
-//		for(int i = 0; i < arr.length; i++){
-//			if(i % 5 == 0) System.out.println();
-//			System.out.print(arr[i] + ",");
-//		}
+		/*int[] arr = { 5, 2, 17, 13, 14, 17, 19, 14, 18, 2, 4, 8, 2, 5, 0, 6, 13, 4, 12, 18, 10 };
+		qs.quicksortByMedian(arr, 0, arr.length-1);
+		for(int i = 0; i < arr1.length; i++){
+			if(i % 5 == 0) System.out.println();
+			System.out.print(arr1[i] + ",");
+		}*/
 	}
 	
 	public Quicksort() {
@@ -56,30 +54,19 @@ public class Quicksort {
 
 		Random rand = new Random();
 		for (int i = 0; i < sortArr.length; i++) {
-			sortArr[i] = rand.nextInt()%2000000;
+			sortArr[i] = rand.nextInt()%200000000;
 		}
 
 		return sortArr;
 	}
 
-	// Quciksort, using last element as pivot
-	public void quicksortByLast(int[] arr, int p, int r) {
-		
-		if (p < r) {
-
-			int q = partition(arr, p, r);
-			quicksortByLast(arr, p, q - 1);
-			quicksortByLast(arr, q + 1, r);
-		}
-	}
-
-	// Partition for quick sort by last element
+	// Partition method for quick sort by last element
 	public int partition(int[] arr, int p, int r) {
 
 		int pivot = arr[r];
 		int i = p - 1;
 		for (int j = p; j < r; j++) {
-			
+
 			partCount++;
 			if (arr[j] <= pivot) {
 				int temp = arr[j];
@@ -96,18 +83,52 @@ public class Quicksort {
 		return (i + 1);
 	}
 
-	// Quicksort, using median of medians as pivot.
-	public void quicksortByMedian(int[] arr, int p, int r) {
-
+	// Quciksort, using last element as pivot
+	public void quicksortByLast(int[] arr, int p, int r) {
+		
 		if (p < r) {
 
-			// Find the medians, Using median of medians algorithm
-			int pivotIdx = findPivot(arr, p, r, (r - p) / 2 + 1);
-			if (pivotIdx != -1) {
-				int q = partition(arr, p, r, pivotIdx);
-				quicksortByMedian(arr, p, q - 1);
-				quicksortByMedian(arr, q + 1, r);
-			}
+			int q = partition(arr, p, r);
+			quicksortByLast(arr, p, q - 1);
+			quicksortByLast(arr, q + 1, r);
+		}
+	}
+
+	// Quicksort, using median of medians as pivot.
+	public void quicksortByMedian(int[] arr, int begin, int end){
+
+		// find pivot by median of medians
+		int size = end - begin + 1;
+
+		// Divide the whole array into n/5 sub-array and find their medians
+		int subLeft, subRight;
+		int numOfmedians = (size % 5 == 0) ? (size / 5) : (size / 5 + 1);
+		for (int i = 0; i < size; i += 5) {
+
+			// last sub-array may have less than 5 elements
+			subLeft = begin + i;
+			subRight = ((i + 5) > size) ? begin + (size - 1) : begin + (i + 4);
+
+			int median = findMedian(arr, subLeft, subRight);
+
+			// move the medians of five-element subgroups to the first n/5 positions
+			int temp = arr[begin + (i / 5)];
+			arr[begin + (i / 5)] = arr[median];
+			arr[median] = temp;
+		}
+
+		// Find the median of medians as pivot, median position = (subEnd - subBegin) / 2 + 1
+		int pivotIdx = select(arr, begin, begin + numOfmedians - 1,
+                (numOfmedians - 1) / 2 + 1);
+
+		if(pivotIdx != -1) {
+
+			// partition the array by the pivot
+			int r = partition(arr, begin, end, pivotIdx);
+
+			// recursively call the quicksort method to sort left/right sub-array
+			quicksortByMedian(arr, begin, r - 1);
+			quicksortByMedian(arr, r + 1, end);
 		}
 	}
 
@@ -121,23 +142,8 @@ public class Quicksort {
 		arr[r] = arr[pivotIdx];
 		arr[pivotIdx] = temp;
 
-		int pivot = arr[r];
-		int i = p - 1;
-		for (int j = p; j < r; j++) {
-			partCount++;
-			if (arr[j] <= pivot) {
-				temp = arr[j];
-				arr[j] = arr[++i];
-				arr[i] = temp;
-			}
-		}
-
-		temp = arr[i + 1];
-		arr[i + 1] = arr[r];
-		arr[r] = temp;
-
 		// return the pivot's index in full array
-		return (i + 1);
+		return partition(arr, p, r);
 	}
 
 	// InsertionSort
@@ -158,8 +164,7 @@ public class Quicksort {
 	public int findMedian(int[] arr, int left, int right) {
 
 		insertionSort(arr, left, right);
-		int m = left + (right - left) / 2;
-		return m;
+		return left + (right - left) / 2;
 	}
 
 	// Return the index of "find" smallest element in array
@@ -170,10 +175,7 @@ public class Quicksort {
 
 		int size = end - begin + 1;
 
-		if (find > size) {
-			System.out.println("Error, input again!");
-			return -1;
-		}
+		if (find > size) return -1;
 
 		if (size <= 500) {
 			
@@ -200,11 +202,9 @@ public class Quicksort {
 			arr[median] = temp;
 		}
 
-		// Find the median of medians as pivot
-		int subBegin = begin;
-		int subEnd = begin + numOfmedians - 1;
-		int pivotIdx = select(arr, subBegin, subEnd,
-				(subEnd - subBegin) / 2 + 1);
+        // Find the median of medians as pivot, median position = (subEnd - subBegin) / 2 + 1
+        int pivotIdx = select(arr, begin, begin + numOfmedians - 1,
+                (numOfmedians - 1) / 2 + 1);
 
 		// Rearrange the sub-array by arr[pivotIdx] and return the pivot's index
 		pivotIdx = partition(arr, begin, end, pivotIdx);
@@ -222,48 +222,5 @@ public class Quicksort {
 		}
 
 	}
-	
-	public int findPivot(int[] arr, int begin, int end, int find) {
-
-		int size = end - begin + 1;
-
-		if (find > size) {
-			System.out.println("Error, input again!");
-			return -1;
-		}
-
-		if (size <= 50) {
-			
-			// returning the "find-th" smallest element's index in array
-			//quicksortByLast(arr, begin, end);
-			insertionSort(arr,begin,end);
-			return begin + find - 1;
-		}
-
-		// Divide the whole array into n/5 sub-array and find their medians
-		int subLeft, subRight;
-		int numOfmedians = (size % 5 == 0) ? (size / 5) : (size / 5 + 1);
-		for (int i = 0; i < size; i += 5) {
-
-			// last sub-array may have less than 5 elements
-			subLeft = begin + i;
-			subRight = ((i + 5) > size) ? begin + (size - 1) : begin + (i + 4);
-
-			int median = findMedian(arr, subLeft, subRight);
-
-			// move the medians of five-element subgroups to the first n/5
-			// positions
-			int temp = arr[begin + (i / 5)];
-			arr[begin + (i / 5)] = arr[median];
-			arr[median] = temp;
-		}
-
-		// Find the median of medians as pivot
-		int subBegin = begin;
-		int subEnd = begin + numOfmedians - 1;
-		return select(arr, subBegin, subEnd, (subEnd - subBegin) / 2 + 1);
-		
-	}
-
 	
 }
