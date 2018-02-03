@@ -9,7 +9,7 @@ public class Quicksort {
 		
 		Quicksort qs = new Quicksort();
 		
-		int[] arr1 = qs.populate(100000000);
+		int[] arr1 = qs.populate(10000);
 		qs.quicksortByLast(arr1, 0, arr1.length - 1);
 		int[] arr2 = Arrays.copyOf(arr1, arr1.length);
 		int[] arr3 = Arrays.copyOf(arr1, arr1.length);
@@ -29,9 +29,9 @@ public class Quicksort {
 		
 		/*int[] arr = { 5, 2, 17, 13, 14, 17, 19, 14, 18, 2, 4, 8, 2, 5, 0, 6, 13, 4, 12, 18, 10 };
 		qs.quicksortByMedian(arr, 0, arr.length-1);
-		for(int i = 0; i < arr1.length; i++){
+		for(int i = 0; i < arr3.length; i++){
 			if(i % 5 == 0) System.out.println();
-			System.out.print(arr1[i] + ",");
+			System.out.print(arr3[i] + ",");
 		}*/
 	}
 	
@@ -54,7 +54,7 @@ public class Quicksort {
 
 		Random rand = new Random();
 		for (int i = 0; i < sortArr.length; i++) {
-			sortArr[i] = rand.nextInt()%200000000;
+			sortArr[i] = rand.nextInt()%20000000;
 		}
 
 		return sortArr;

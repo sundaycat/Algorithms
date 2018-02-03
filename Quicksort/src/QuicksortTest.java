@@ -15,8 +15,6 @@ import static org.junit.Assert.*;
 
 /**
  * The main JUnit Test class to test each method in Quicksort
- * 
- * 
  */
 public class QuicksortTest {
 
