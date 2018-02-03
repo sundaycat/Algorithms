@@ -9,7 +9,7 @@ import java.io.IOException;
 import java.io.PrintWriter;
 
 
-public class MazeTest { 
+public class MazeTest {
 
 	public static void main(String[] args) {
 
